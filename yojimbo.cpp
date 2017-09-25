@@ -715,8 +715,8 @@ namespace yojimbo
 // ---------------------------------------------------------------------------------
 
 #include "yojimbo.h"
-#include "netcode.h"
-#include "reliable.h"
+#include "netcode.io/netcode.h"
+#include "reliable.io/reliable.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -905,7 +905,7 @@ double yojimbo_time()
 #endif // #if YOJIMBO_WITH_MBEDTLS
 #include <inttypes.h>
 #include <string.h>
-#include "netcode.h"
+#include "netcode.io/netcode.h"
 
 #define SERVER_PORT "8080"
 #define SERVER_NAME "localhost"
