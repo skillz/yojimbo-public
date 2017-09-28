@@ -50,6 +50,10 @@ int ClientMain( int argc, char * argv[] )
     random_bytes( (uint8_t*) &clientId, 8 );
     printf( "client id is %.16" PRIx64 "\n", clientId );
 
+    uint64_t matchId = 0;
+    random_bytes( (uint8_t*) &matchId, 8 );
+    printf( "joining match %" PRIu64 "\n", matchId);
+
     ClientServerConfig config;
 
     Client client( GetDefaultAllocator(), Address("0.0.0.0"), config, adapter, time );
@@ -70,7 +74,7 @@ int ClientMain( int argc, char * argv[] )
     uint8_t privateKey[KeyBytes];
     memset( privateKey, 0, KeyBytes );
 
-    client.InsecureConnect( privateKey, clientId, serverAddress );
+    client.InsecureConnect( privateKey, clientId, matchId, serverAddress );
 
     char addressString[256];
     client.GetAddress().ToString( addressString, sizeof( addressString ) );
