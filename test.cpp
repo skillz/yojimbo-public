@@ -1581,6 +1581,7 @@ void ProcessClientToServerMessages( Server & server, int clientIndex, int & numM
 void test_client_server_messages()
 {
     const uint64_t clientId = 1;
+    const uint64_t matchId = 111;
 
     Address clientAddress( "0.0.0.0", ClientPort );
     Address serverAddress( "127.0.0.1", ServerPort );
@@ -1614,7 +1615,7 @@ void test_client_server_messages()
 
     for ( int iteration = 0; iteration < 2; ++iteration )
     {
-        client.InsecureConnect( privateKey, clientId, serverAddress );
+        client.InsecureConnect( privateKey, clientId, matchId, serverAddress );
 
         const int NumIterations = 10000;
 
@@ -1705,7 +1706,7 @@ void ConnectClients( int numClients, Client ** clients, const uint8_t privateKey
 {
     for ( int i = 0; i < numClients; ++i )
     {
-        clients[i]->InsecureConnect( privateKey, i + 1, serverAddress );
+        clients[i]->InsecureConnect( privateKey, i + 1, i + 110, serverAddress );
     }
 }
 
@@ -1856,6 +1857,7 @@ void test_client_server_start_stop_restart()
 void test_client_server_message_failed_to_serialize_reliable_ordered()
 {
     const uint64_t clientId = 1;
+    const uint64_t matchId = 111;
 
     Address clientAddress( "0.0.0.0", ClientPort );
     Address serverAddress( "127.0.0.1", ServerPort );
@@ -1878,7 +1880,7 @@ void test_client_server_message_failed_to_serialize_reliable_ordered()
 
     Client client( GetDefaultAllocator(), clientAddress, config, adapter, time );
 
-    client.InsecureConnect( privateKey, clientId, serverAddress );
+    client.InsecureConnect( privateKey, clientId, matchId, serverAddress );
 
     const int NumIterations = 10000;
 
@@ -1929,6 +1931,7 @@ void test_client_server_message_failed_to_serialize_reliable_ordered()
 void test_client_server_message_failed_to_serialize_unreliable_unordered()
 {
     const uint64_t clientId = 1;
+    const uint64_t matchId = 111;
 
     Address clientAddress( "0.0.0.0", ClientPort );
     Address serverAddress( "127.0.0.1", ServerPort );
@@ -1951,7 +1954,7 @@ void test_client_server_message_failed_to_serialize_unreliable_unordered()
 
     Client client( GetDefaultAllocator(), clientAddress, config, adapter, time );
 
-    client.InsecureConnect( privateKey, clientId, serverAddress );
+    client.InsecureConnect( privateKey, clientId, matchId, serverAddress );
 
     const int NumIterations = 10000;
 
@@ -2003,6 +2006,7 @@ void test_client_server_message_failed_to_serialize_unreliable_unordered()
 void test_client_server_message_exhaust_stream_allocator()
 {
     const uint64_t clientId = 1;
+    const uint64_t matchId = 111;
 
     Address clientAddress( "0.0.0.0", ClientPort );
     Address serverAddress( "127.0.0.1", ServerPort );
@@ -2025,7 +2029,7 @@ void test_client_server_message_exhaust_stream_allocator()
 
     Client client( GetDefaultAllocator(), clientAddress, config, adapter, time );
 
-    client.InsecureConnect( privateKey, clientId, serverAddress );
+    client.InsecureConnect( privateKey, clientId, matchId, serverAddress );
 
     const int NumIterations = 10000;
 
@@ -2076,6 +2080,7 @@ void test_client_server_message_exhaust_stream_allocator()
 void test_client_server_message_receive_queue_overflow()
 {
     const uint64_t clientId = 1;
+    const uint64_t matchId = 111;
 
     Address clientAddress( "0.0.0.0", ClientPort );
     Address serverAddress( "127.0.0.1", ServerPort );
@@ -2100,7 +2105,7 @@ void test_client_server_message_receive_queue_overflow()
 
     Client client( GetDefaultAllocator(), clientAddress, config, adapter, time );
 
-    client.InsecureConnect( privateKey, clientId, serverAddress );
+    client.InsecureConnect( privateKey, clientId, matchId, serverAddress );
 
     while ( true )
     {

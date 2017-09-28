@@ -5069,6 +5069,14 @@ namespace yojimbo
 
         virtual uint64_t GetClientId( int clientIndex ) const = 0;
 
+        /**
+
+            Get the skillz match id of the client.
+            @param clientIndex the index of the client slot in [0,maxClients-1], where maxClients corresponds to the value passed into the last call to Server::Start.
+          */
+
+        virtual uint64_t GetSkillzMatchId( int clientIndex ) const = 0;
+
         /** 
             Get the number of clients that are currently connected to the server.
             @returns the number of connected clients.
@@ -5169,10 +5177,11 @@ namespace yojimbo
             This allows you to have local clients connected to a server, for example for integrated server or singleplayer.
             @param clientIndex The index of the client.
             @param clientId The unique client id.
+            @param skillzMatchId The skillz match id.
             @param userData User data for this client. Optional. Pass NULL if not needed.
          */
 
-        virtual void ConnectLoopbackClient( int clientIndex, uint64_t clientId, const uint8_t * userData ) = 0;
+        virtual void ConnectLoopbackClient( int clientIndex, uint64_t clientId, uint64_t skillzMatchId, const uint8_t * userData ) = 0;
 
         /**
             Disconnect a loopback client.
@@ -5334,9 +5343,11 @@ namespace yojimbo
 
         uint64_t GetClientId( int clientIndex ) const;
 
+        uint64_t GetSkillzMatchId( int clientIndex ) const;
+
         int GetNumConnectedClients() const;
 
-        void ConnectLoopbackClient( int clientIndex, uint64_t clientId, const uint8_t * userData );
+        void ConnectLoopbackClient( int clientIndex, uint64_t clientId, uint64_t skillzMatchId, const uint8_t * userData );
 
         void DisconnectLoopbackClient( int clientIndex );
 
@@ -5479,6 +5490,14 @@ namespace yojimbo
         virtual uint64_t GetClientId() const = 0;
 
         /**
+
+          Get the skillz match id.
+          @returns The skillz match id.
+          */
+
+        virtual uint64_t GetSkillzMatchId() const = 0;
+
+        /**
             Get the current client time.
             @see Client::AdvanceTime
          */
@@ -5562,10 +5581,11 @@ namespace yojimbo
             This allows you to have local clients connected to a server, for example for integrated server or singleplayer.
             @param clientIndex The index of the client.
             @param clientId The unique client id.
+            @param skillzMatchId The skillz match id.
             @param maxClients The maximum number of clients supported by the server.
          */
 
-        virtual void ConnectLoopback( int clientIndex, uint64_t clientId, int maxClients ) = 0;
+        virtual void ConnectLoopback( int clientIndex, uint64_t clientId, uint64_t skillzMatchId, int maxClients ) = 0;
 
         /**
             Disconnect from server over loopback.
@@ -5737,11 +5757,11 @@ namespace yojimbo
 
         ~Client();
 
-        void InsecureConnect( const uint8_t privateKey[], uint64_t clientId, const Address & address );
+        void InsecureConnect( const uint8_t privateKey[], uint64_t clientId, uint64_t skillzMatchId, const Address & address );
 
-        void InsecureConnect( const uint8_t privateKey[], uint64_t clientId, const Address serverAddresses[], int numServerAddresses );
+        void InsecureConnect( const uint8_t privateKey[], uint64_t clientId, uint64_t skillzMatchId, const Address serverAddresses[], int numServerAddresses );
 
-        void Connect( uint64_t clientId, uint8_t * connectToken );
+        void Connect( uint64_t clientId, uint64_t skillzMatchId, uint8_t * connectToken );
 
         void Disconnect();
 
@@ -5755,7 +5775,9 @@ namespace yojimbo
 
         uint64_t GetClientId() const { return m_clientId; }
 
-        void ConnectLoopback( int clientIndex, uint64_t clientId, int maxClients );
+        uint64_t GetSkillzMatchId() const { return m_skillzMatchId; }
+
+        void ConnectLoopback( int clientIndex, uint64_t clientId, uint64_t skillzMatchId, int maxClients );
 
         void DisconnectLoopback();
 
@@ -5770,6 +5792,7 @@ namespace yojimbo
         bool GenerateInsecureConnectToken( uint8_t * connectToken, 
                                            const uint8_t privateKey[], 
                                            uint64_t clientId, 
+                                           uint64_t skillzMatchId,
                                            const Address serverAddresses[], 
                                            int numServerAddresses );
 
@@ -5794,6 +5817,7 @@ namespace yojimbo
         Address m_address;                              ///< Original address passed to ctor.
         Address m_boundAddress;                         ///< Address after socket bind, eg. with valid port
         uint64_t m_clientId;                            ///< The globally unique client id (set on each call to connect)
+        uint64_t m_skillzMatchId;						///< The unique skillz match id (set on each call to connect).
     };
 
     /**

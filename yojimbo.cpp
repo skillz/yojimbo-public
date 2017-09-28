@@ -3175,6 +3175,7 @@ namespace yojimbo
         : BaseClient( allocator, config, adapter, time ), m_config( config ), m_address( address )
     {
         m_clientId = 0;
+        m_skillzMatchId = 0;
         m_client = NULL;
         m_boundAddress = m_address;
     }
@@ -3185,12 +3186,12 @@ namespace yojimbo
         yojimbo_assert( m_client == NULL );
     }
 
-    void Client::InsecureConnect( const uint8_t privateKey[], uint64_t clientId, const Address & address )
+    void Client::InsecureConnect( const uint8_t privateKey[], uint64_t clientId, uint64_t skillzMatchId, const Address & address )
     {
-        InsecureConnect( privateKey, clientId, &address, 1 );
+        InsecureConnect( privateKey, clientId, skillzMatchId, &address, 1 );
     }
 
-    void Client::InsecureConnect( const uint8_t privateKey[], uint64_t clientId, const Address serverAddresses[], int numServerAddresses )
+    void Client::InsecureConnect( const uint8_t privateKey[], uint64_t clientId, uint64_t skillzMatchId, const Address serverAddresses[], int numServerAddresses )
     {
         yojimbo_assert( serverAddresses );
         yojimbo_assert( numServerAddresses > 0 );
@@ -3198,6 +3199,7 @@ namespace yojimbo
         Disconnect();
         CreateInternal();
         m_clientId = clientId;
+        m_skillzMatchId = skillzMatchId;
         CreateClient( m_address );
         if ( !m_client )
         {
@@ -3205,7 +3207,7 @@ namespace yojimbo
             return;
         }
         uint8_t connectToken[NETCODE_CONNECT_TOKEN_BYTES];
-        if ( !GenerateInsecureConnectToken( connectToken, privateKey, clientId, serverAddresses, numServerAddresses ) )
+        if ( !GenerateInsecureConnectToken( connectToken, privateKey, clientId, skillzMatchId, serverAddresses, numServerAddresses ) )
         {
             yojimbo_printf( YOJIMBO_LOG_LEVEL_ERROR, "error: failed to generate insecure connect token\n" );
             SetClientState( CLIENT_STATE_ERROR );
@@ -3218,6 +3220,7 @@ namespace yojimbo
     bool Client::GenerateInsecureConnectToken( uint8_t * connectToken, 
                                                const uint8_t privateKey[], 
                                                uint64_t clientId, 
+                                               uint64_t skillzMatchId,
                                                const Address serverAddresses[], 
                                                int numServerAddresses )
     {
@@ -3233,18 +3236,20 @@ namespace yojimbo
                                                m_config.timeout,
                                                m_config.timeout, 
                                                clientId, 
+                                               skillzMatchId,
                                                m_config.protocolId, 
                                                0, 
                                                (uint8_t*)privateKey, 
                                                connectToken ) == NETCODE_OK;
     }
 
-    void Client::Connect( uint64_t clientId, uint8_t * connectToken )
+    void Client::Connect( uint64_t clientId, uint64_t skillzMatchId, uint8_t * connectToken )
     {
         yojimbo_assert( connectToken );
         Disconnect();
         CreateInternal();
         m_clientId = clientId;
+        m_skillzMatchId = skillzMatchId;
         CreateClient( m_address );
         netcode_client_connect( m_client, connectToken );
         if ( netcode_client_state( m_client ) > NETCODE_CLIENT_STATE_DISCONNECTED )
@@ -3263,6 +3268,7 @@ namespace yojimbo
         DestroyClient();
         DestroyInternal();
         m_clientId = 0;
+        m_skillzMatchId = 0;
     }
 
     void Client::SendPackets()
@@ -3341,11 +3347,12 @@ namespace yojimbo
         return m_client ? netcode_client_index( m_client ) : -1;
     }
 
-    void Client::ConnectLoopback( int clientIndex, uint64_t clientId, int maxClients )
+    void Client::ConnectLoopback( int clientIndex, uint64_t clientId, uint64_t skillzMatchId ,int maxClients )
     {
         Disconnect();
         CreateInternal();
         m_clientId = clientId;
+        m_skillzMatchId = skillzMatchId;
         CreateClient( m_address );
         netcode_client_connect_loopback( m_client, clientIndex, maxClients );
         SetClientState( CLIENT_STATE_CONNECTED );
@@ -3358,6 +3365,7 @@ namespace yojimbo
         DestroyClient();
         DestroyInternal();
         m_clientId = 0;
+        m_skillzMatchId = 0;
     }
 
     bool Client::IsLoopback() const
@@ -3902,14 +3910,19 @@ namespace yojimbo
         return netcode_server_client_id( m_server, clientIndex );
     }
 
+    uint64_t Server::GetSkillzMatchId( int clientIndex ) const
+    {
+        return netcode_server_skillz_match_id( m_server, clientIndex );
+    }
+
     int Server::GetNumConnectedClients() const
     {
         return netcode_server_num_connected_clients( m_server );
     }
 
-    void Server::ConnectLoopbackClient( int clientIndex, uint64_t clientId, const uint8_t * userData )
+    void Server::ConnectLoopbackClient( int clientIndex, uint64_t clientId, uint64_t skillzMatchId, const uint8_t * userData )
     {
-        netcode_server_connect_loopback_client( m_server, clientIndex, clientId, userData );
+        netcode_server_connect_loopback_client( m_server, clientIndex, clientId, skillzMatchId, userData );
     }
 
     void Server::DisconnectLoopbackClient( int clientIndex )
