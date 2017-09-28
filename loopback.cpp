@@ -99,13 +99,17 @@ int ClientServerMain()
     random_bytes( (uint8_t*) &clientId, 8 );
     printf( "client id is %.16" PRIx64 "\n", clientId );
 
+    uint64_t matchId = 0;
+    random_bytes( (uint8_t*) &matchId, 8 );
+    printf( "joining match %" PRIu64 "\n", matchId);
+
     Client client( GetDefaultAllocator(), Address("0.0.0.0"), config, loopbackAdapter, time );
 
     Address serverAddress( "127.0.0.1", ServerPort );
 
-    client.ConnectLoopback( 0, clientId, MaxClients );
+    client.ConnectLoopback( 0, clientId, matchId, MaxClients );
 
-    server.ConnectLoopbackClient( 0, clientId, NULL );
+    server.ConnectLoopbackClient( 0, clientId, matchId, NULL );
 
     loopbackAdapter.client = &client;
     loopbackAdapter.server = &server;
