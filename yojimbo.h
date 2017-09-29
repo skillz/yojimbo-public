@@ -5817,7 +5817,7 @@ namespace yojimbo
         Address m_address;                              ///< Original address passed to ctor.
         Address m_boundAddress;                         ///< Address after socket bind, eg. with valid port
         uint64_t m_clientId;                            ///< The globally unique client id (set on each call to connect)
-        uint64_t m_skillzMatchId;						///< The unique skillz match id (set on each call to connect).
+        uint64_t m_skillzMatchId;			///< The unique skillz match id (set on each call to connect).
     };
 
     /**
