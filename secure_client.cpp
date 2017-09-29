@@ -51,6 +51,10 @@ int ClientMain( int argc, char * argv[] )
     random_bytes( (uint8_t*) &clientId, 8 );
     printf( "client id is %.16" PRIx64 "\n", clientId );
 
+    uint64_t matchId = 0;
+    random_bytes( (uint8_t*) &matchId , 8 );
+    printf( "joining match %" PRIu64 "\n", matchId );
+
     Matcher matcher( GetDefaultAllocator() );
 
     if ( !matcher.Initialize() )
@@ -93,7 +97,7 @@ int ClientMain( int argc, char * argv[] )
         }
     }
 
-    client.Connect( clientId, connectToken );
+    client.Connect( clientId, matchId, connectToken );
 
     if ( client.IsDisconnected() )
         return 1;

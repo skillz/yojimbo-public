@@ -64,11 +64,15 @@ int ClientServerMain()
     random_bytes( (uint8_t*) &clientId, 8 );
     printf( "client id is %.16" PRIx64 "\n", clientId );
 
+    uint64_t matchId = 0;
+    random_bytes( (uint8_t*) &matchId, 8 );
+    printf( "joining match %" PRIu64 "\n", matchId);
+
     Client client( GetDefaultAllocator(), Address("0.0.0.0"), config, adapter, time );
 
     Address serverAddress( "127.0.0.1", ServerPort );
 
-    client.InsecureConnect( privateKey, clientId, serverAddress );
+    client.InsecureConnect( privateKey, clientId, matchId, serverAddress );
 
     const double deltaTime = 0.1;
 
