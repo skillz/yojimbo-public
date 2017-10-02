@@ -47,18 +47,15 @@ inline int GetNumBitsForMessage( uint16_t sequence )
     return messageBitsArray[index];
 }
 
-struct TestMessage : public Message
+struct SkillzMessage : public Message
 {
     uint16_t sequence;
 
-    TestMessage()
-    {
-        sequence = 0;
-    }
+    SkillzMessage() : sequence( 0 ) {}
 
     template <typename Stream> bool Serialize( Stream & stream )
-    {        
-        serialize_bits( stream, sequence, 16 );
+    {
+        serialize_bits( stream, sequence, sizeof(uint16_t) * 8 );
 
         int numBits = GetNumBitsForMessage( sequence );
         int numWords = numBits / 32;
@@ -75,18 +72,32 @@ struct TestMessage : public Message
     YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
-struct TestBlockMessage : public BlockMessage
+struct SkillzBlockMessage : public BlockMessage
 {
     uint16_t sequence;
 
-    TestBlockMessage()
-    {
-        sequence = 0;
-    }
+    SkillzBlockMessage() : sequence ( 0 ) {}
 
     template <typename Stream> bool Serialize( Stream & stream )
-    {        
-        serialize_bits( stream, sequence, 16 );
+    {
+        serialize_bits( stream, sequence, sizeof(uint16_t) * 8 );
+        return true;
+    }
+
+    YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+
+// Game Start Message sent by the server to the clients
+struct GameStart : public BlockMessage
+{
+    uint16_t matchId;
+
+    // TODO: Change to get the actual matchId from the server instead of doing hard-coding a value
+    GameStart() : matchId( 12345 ) {}
+
+    template <typename Stream> bool Serialize( Stream & stream )
+    {
+        serialize_bits( stream, matchId, sizeof(uint16_t) * 8 );
         return true;
     }
 
@@ -96,7 +107,7 @@ struct TestBlockMessage : public BlockMessage
 struct TestSerializeFailOnReadMessage : public Message
 {
     template <typename Stream> bool Serialize( Stream & /*stream*/ )
-    {        
+    {
         return !Stream::IsReading;
     }
 
@@ -106,7 +117,7 @@ struct TestSerializeFailOnReadMessage : public Message
 struct TestExhaustStreamAllocatorOnReadMessage : public Message
 {
     template <typename Stream> bool Serialize( Stream & stream )
-    {        
+    {
         if ( Stream::IsReading )
         {
             const int NumBuffers = 100;
@@ -132,18 +143,20 @@ struct TestExhaustStreamAllocatorOnReadMessage : public Message
     YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
-enum TestMessageType
+enum SkillzMessageType
 {
-    TEST_MESSAGE,
-    TEST_BLOCK_MESSAGE,
+    SKILLZ_MESSAGE,
+    SKILLZ_BLOCK_MESSAGE,
+    GAME_START,
     TEST_SERIALIZE_FAIL_ON_READ_MESSAGE,
     TEST_EXHAUST_STREAM_ALLOCATOR_ON_READ_MESSAGE,
     NUM_TEST_MESSAGE_TYPES
 };
 
 YOJIMBO_MESSAGE_FACTORY_START( TestMessageFactory, NUM_TEST_MESSAGE_TYPES );
-    YOJIMBO_DECLARE_MESSAGE_TYPE( TEST_MESSAGE, TestMessage );
-    YOJIMBO_DECLARE_MESSAGE_TYPE( TEST_BLOCK_MESSAGE, TestBlockMessage );
+    YOJIMBO_DECLARE_MESSAGE_TYPE( SKILLZ_MESSAGE, SkillzMessage );
+    YOJIMBO_DECLARE_MESSAGE_TYPE( GAME_START, GameStart );
+    YOJIMBO_DECLARE_MESSAGE_TYPE( SKILLZ_BLOCK_MESSAGE, SkillzBlockMessage );
     YOJIMBO_DECLARE_MESSAGE_TYPE( TEST_SERIALIZE_FAIL_ON_READ_MESSAGE, TestSerializeFailOnReadMessage );
     YOJIMBO_DECLARE_MESSAGE_TYPE( TEST_EXHAUST_STREAM_ALLOCATOR_ON_READ_MESSAGE, TestExhaustStreamAllocatorOnReadMessage );
 YOJIMBO_MESSAGE_FACTORY_FINISH();

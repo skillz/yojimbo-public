@@ -68,6 +68,38 @@ int ServerMain()
 
         time += deltaTime;
 
+        // Do stuff here ====================================
+        const int numClients = server.GetNumConnectedClients();
+
+        for ( int i = 0; i < numClients; ++i )
+        {
+            Message * message = server.ReceiveMessage( i, 0 );
+
+            if ( !message )
+                continue;
+
+            switch ( message->GetType() )
+            {
+                case SKILLZ_MESSAGE:
+                {
+                    SkillzMessage * skillzMessage = (SkillzMessage*) message;
+                    printf( "Received skillz message # %d\n", skillzMessage->sequence );
+                }
+                break;
+
+                case SKILLZ_BLOCK_MESSAGE:
+                {
+                    SkillzBlockMessage * skillzBlockMessage = (SkillzBlockMessage*) message;
+                    printf( "Received skillz block message # %d\n", skillzBlockMessage->sequence );
+                }
+                break;
+            }
+
+            server.ReleaseMessage( i, message );
+        }
+
+        // ==================================================
+
         server.AdvanceTime( time );
 
         if ( !server.IsRunning() )
