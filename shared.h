@@ -92,6 +92,7 @@ struct GameStart : public BlockMessage
 {
     uint16_t matchId;
 
+    // TODO: Change to get the actual matchId from the server instead of doing hard-coding a value
     GameStart() : matchId( 12345 ) {}
 
     template <typename Stream> bool Serialize( Stream & stream )
