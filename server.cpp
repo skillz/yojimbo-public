@@ -26,7 +26,7 @@
 #include <signal.h>
 #include <time.h>
 
-#include "messages.h"
+#include "shared.h"
 
 using namespace yojimbo;
 
@@ -71,31 +71,31 @@ int ServerMain()
         // Do stuff here ====================================
         const int numClients = server.GetNumConnectedClients();
 
-        for (int i = 0; i < numClients; ++i)
+        for ( int i = 0; i < numClients; ++i )
         {
-            Message * message = server.ReceiveMessage(i, 0);
+            Message * message = server.ReceiveMessage( i, 0 );
 
             if ( !message )
                 continue;
 
-            switch (message->GetType())
+            switch ( message->GetType() )
             {
                 case SKILLZ_MESSAGE:
                 {
                     SkillzMessage * skillzMessage = (SkillzMessage*) message;
-                    printf("Received skillz message # %d\n", skillzMessage->sequence );
+                    printf( "Received skillz message # %d\n", skillzMessage->sequence );
                 }
                 break;
 
                 case SKILLZ_BLOCK_MESSAGE:
                 {
                     SkillzBlockMessage * skillzBlockMessage = (SkillzBlockMessage*) message;
-                    printf("Received skillz block message # %d\n", skillzBlockMessage->sequence );
+                    printf( "Received skillz block message # %d\n", skillzBlockMessage->sequence );
                 }
                 break;
             }
 
-            server.ReleaseMessage(i, message);
+            server.ReleaseMessage( i, message );
         }
 
         // ==================================================

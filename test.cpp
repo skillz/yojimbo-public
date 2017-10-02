@@ -29,7 +29,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 
-#include "messages.h"
+#include "shared.h"
 
 using namespace yojimbo;
 

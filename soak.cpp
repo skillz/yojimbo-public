@@ -22,7 +22,7 @@
     USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "messages.h"
+#include "shared.h"
 #include <signal.h>
 
 const int MaxPacketSize = 16 * 1024;
@@ -112,8 +112,8 @@ int SoakMain()
 						break;
 
 					if ( rand() % 25 )
-					{
-                        SkillzMessage * message = (SkillzMessage*) client.CreateMessage( SKILLZ_MESSAGE );
+                    {
+                                                SkillzMessage * message = (SkillzMessage*) client.CreateMessage( SKILLZ_MESSAGE );
 						if ( message )
 						{
 							message->sequence = (uint16_t) numMessagesSentToServer;
@@ -123,7 +123,7 @@ int SoakMain()
 					}
 					else
 					{
-                        SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) client.CreateMessage( SKILLZ_BLOCK_MESSAGE );
+                                                SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) client.CreateMessage( SKILLZ_BLOCK_MESSAGE );
 						if ( blockMessage )
 						{
 							blockMessage->sequence = (uint16_t) numMessagesSentToServer;
