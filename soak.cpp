@@ -112,7 +112,7 @@ int SoakMain()
 						break;
 
 					if ( rand() % 25 )
-                    {
+                                        {
                                                 SkillzMessage * message = (SkillzMessage*) client.CreateMessage( SKILLZ_MESSAGE );
 						if ( message )
 						{
