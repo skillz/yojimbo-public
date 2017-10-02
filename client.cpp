@@ -29,7 +29,7 @@
 #include <inttypes.h>
 #include <time.h>
 #include <signal.h>
-#include "shared.h"
+#include "messages.h"
 
 using namespace yojimbo;
 
@@ -90,6 +90,36 @@ int ClientMain( int argc, char * argv[] )
             break;
      
         time += deltaTime;
+
+        Message * message = client.ReceiveMessage(0);
+
+        if (message)
+        {
+            switch (message->GetType())
+            {
+                case SKILLZ_MESSAGE:
+                {
+                    SkillzMessage * skillzMessage = (SkillzMessage*) message;
+                    printf("Received skillz message # %d\n", skillzMessage->sequence );
+                }
+                break;
+
+                case GAME_START:
+                {
+                    GameStart * gameStartMessage = (GameStart*) message;
+                    printf("Game Start match # %d from server\n", gameStartMessage->matchId );
+                }
+                break;
+
+                case SKILLZ_BLOCK_MESSAGE:
+                {
+                    SkillzBlockMessage * skillzBlockMessage = (SkillzBlockMessage*) message;
+                    printf("Received skillz block message # %d\n", skillzBlockMessage->sequence );
+                }
+                break;
+            }
+            client.ReleaseMessage(message);
+        }
 
         client.AdvanceTime( time );
 

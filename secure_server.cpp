@@ -26,7 +26,7 @@
 #include <signal.h>
 #include <time.h>
 
-#include "shared.h"
+#include "messages.h"
 
 using namespace yojimbo;
 

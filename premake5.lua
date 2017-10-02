@@ -17,7 +17,9 @@ solution "Yojimbo"
     end
     rtti "Off"
     links { libs }
-    flags { "ExtraWarnings", "FloatFast", "EnableSSE2" }
+    warnings "Extra"
+    floatingpoint "Fast"
+    vectorextensions "SSE2"
     configuration "Debug"
         symbols "On"
     configuration "Release"
@@ -34,31 +36,31 @@ project "yojimbo"
     files { "yojimbo.h", "yojimbo.cpp", "tlsf/tlsf.h", "tlsf/tlsf.c", "netcode.io/netcode.c", "netcode.io/netcode.h", "reliable.io/reliable.c", "reliable.io/reliable.h" }
 
 project "client"
-    files { "client.cpp", "shared.h" }
+    files { "client.cpp", "messages.h" }
     links { "yojimbo" }
 
 project "server"
-    files { "server.cpp", "shared.h" }
+    files { "server.cpp", "messages.h" }
     links { "yojimbo" }
 
 project "secure_client"
-    files { "secure_client.cpp", "shared.h" }
+    files { "secure_client.cpp", "messages.h" }
     links { "yojimbo" }
 
 project "secure_server"
-    files { "secure_server.cpp", "shared.h" }
+    files { "secure_server.cpp", "messages.h" }
     links { "yojimbo" }
 
 project "client_server"
-    files { "client_server.cpp", "shared.h" }
+    files { "client_server.cpp", "messages.h" }
     links { "yojimbo" }
 
 project "loopback"
-    files { "loopback.cpp", "shared.h" }
+    files { "loopback.cpp", "messages.h" }
     links { "yojimbo" }
 
 project "soak"
-    files { "soak.cpp", "shared.h" }
+    files { "soak.cpp", "messsages.h" }
     links { "yojimbo" }
 
 if not os.is "windows" then

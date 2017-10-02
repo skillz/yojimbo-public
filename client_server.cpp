@@ -29,7 +29,7 @@
 #include <inttypes.h>
 #include <time.h>			 
 #include <signal.h>
-#include "shared.h"
+#include "messages.h"
 
 using namespace yojimbo;
 

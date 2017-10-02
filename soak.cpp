@@ -22,7 +22,7 @@
     USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "shared.h"
+#include "messages.h"
 #include <signal.h>
 
 const int MaxPacketSize = 16 * 1024;
@@ -113,7 +113,7 @@ int SoakMain()
 
 					if ( rand() % 25 )
 					{
-						TestMessage * message = (TestMessage*) client.CreateMessage( TEST_MESSAGE );
+                        SkillzMessage * message = (SkillzMessage*) client.CreateMessage( SKILLZ_MESSAGE );
 						if ( message )
 						{
 							message->sequence = (uint16_t) numMessagesSentToServer;
@@ -123,7 +123,7 @@ int SoakMain()
 					}
 					else
 					{
-						TestBlockMessage * blockMessage = (TestBlockMessage*) client.CreateMessage( TEST_BLOCK_MESSAGE );
+                        SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) client.CreateMessage( SKILLZ_BLOCK_MESSAGE );
 						if ( blockMessage )
 						{
 							blockMessage->sequence = (uint16_t) numMessagesSentToServer;
@@ -161,7 +161,7 @@ int SoakMain()
 
                     if ( rand() % 25 )
                     {
-                        TestMessage * message = (TestMessage*) server.CreateMessage( clientIndex, TEST_MESSAGE );
+                        SkillzMessage * message = (SkillzMessage*) server.CreateMessage( clientIndex, SKILLZ_MESSAGE );
                         if ( message )
                         {
                             message->sequence = (uint16_t) numMessagesSentToClient;
@@ -171,7 +171,7 @@ int SoakMain()
                     }
                     else
                     {
-                        TestBlockMessage * blockMessage = (TestBlockMessage*) server.CreateMessage( clientIndex, TEST_BLOCK_MESSAGE );
+                        SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) server.CreateMessage( clientIndex, SKILLZ_BLOCK_MESSAGE );
                         if ( blockMessage )
                         {
                             blockMessage->sequence = (uint16_t) numMessagesSentToClient;
@@ -203,9 +203,9 @@ int SoakMain()
 
                     switch ( message->GetType() )
                     {
-                        case TEST_MESSAGE:
+                        case SKILLZ_MESSAGE:
                         {
-                            TestMessage * testMessage = (TestMessage*) message;
+                            SkillzMessage * testMessage = (SkillzMessage*) message;
                             yojimbo_assert( testMessage->sequence == uint16_t( numMessagesReceivedFromClient ) );
                             printf( "server received message %d\n", testMessage->sequence );
                             server.ReleaseMessage( clientIndex, message );
@@ -213,9 +213,9 @@ int SoakMain()
                         }
                         break;
 
-                        case TEST_BLOCK_MESSAGE:
+                        case SKILLZ_BLOCK_MESSAGE:
                         {
-                            TestBlockMessage * blockMessage = (TestBlockMessage*) message;
+                            SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) message;
                             yojimbo_assert( blockMessage->sequence == uint16_t( numMessagesReceivedFromClient ) );
                             const int blockSize = blockMessage->GetBlockSize();
                             const int expectedBlockSize = 1 + ( int( numMessagesReceivedFromClient ) * 33 ) % MaxBlockSize;
@@ -254,9 +254,9 @@ int SoakMain()
 
                 switch ( message->GetType() )
                 {
-                    case TEST_MESSAGE:
+                    case SKILLZ_MESSAGE:
                     {
-                        TestMessage * testMessage = (TestMessage*) message;
+                        SkillzMessage * testMessage = (SkillzMessage*) message;
                         yojimbo_assert( testMessage->sequence == uint16_t( numMessagesReceivedFromServer ) );
                         printf( "client received message %d\n", testMessage->sequence );
                         client.ReleaseMessage( message );
@@ -264,9 +264,9 @@ int SoakMain()
                     }
                     break;
 
-                    case TEST_BLOCK_MESSAGE:
+                    case SKILLZ_BLOCK_MESSAGE:
                     {
-                        TestBlockMessage * blockMessage = (TestBlockMessage*) message;
+                        SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) message;
                         yojimbo_assert( blockMessage->sequence == uint16_t( numMessagesReceivedFromServer ) );
                         const int blockSize = blockMessage->GetBlockSize();
                         const int expectedBlockSize = 1 + ( int( numMessagesReceivedFromServer ) * 33 ) % MaxBlockSize;
