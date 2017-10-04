@@ -884,7 +884,7 @@ void test_connection_reliable_ordered_messages()
 
     for ( int i = 0; i < NumMessagesSent; ++i )
     {
-        SkillzMessage * message = (SkillzMessage*) messageFactory.CreateMessage( SKILLZ_MESSAGE );
+        TestMessage * message = (TestMessage*) messageFactory.CreateMessage( TEST_MESSAGE );
         check( message );
         message->sequence = i;
         sender.SendMessage( 0, message );
@@ -914,9 +914,9 @@ void test_connection_reliable_ordered_messages()
                 break;
 
             check( message->GetId() == (int) numMessagesReceived );
-            check( message->GetType() == SKILLZ_MESSAGE );
+            check( message->GetType() == TEST_MESSAGE );
 
-            SkillzMessage * testMessage = (SkillzMessage*) message;
+            TestMessage * testMessage = (TestMessage*) message;
 
             check( testMessage->sequence == numMessagesReceived );
 
@@ -947,7 +947,7 @@ void test_connection_reliable_ordered_blocks()
 
     for ( int i = 0; i < NumMessagesSent; ++i )
     {
-        SkillzBlockMessage * message = (SkillzBlockMessage*) messageFactory.CreateMessage( SKILLZ_BLOCK_MESSAGE );
+        TestBlockMessage * message = (TestBlockMessage*) messageFactory.CreateMessage( TEST_BLOCK_MESSAGE );
         check( message );
         message->sequence = i;
         const int blockSize = 1 + ( ( i * 901 ) % 3333 );
@@ -983,9 +983,9 @@ void test_connection_reliable_ordered_blocks()
 
             check( message->GetId() == (int) numMessagesReceived );
 
-            check( message->GetType() == SKILLZ_BLOCK_MESSAGE );
+            check( message->GetType() == TEST_BLOCK_MESSAGE );
 
-            SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) message;
+            TestBlockMessage * blockMessage = (TestBlockMessage*) message;
 
             check( blockMessage->sequence == uint16_t( numMessagesReceived ) );
 
@@ -1032,14 +1032,14 @@ void test_connection_reliable_ordered_messages_and_blocks()
     {
         if ( rand() % 2 )
         {
-            SkillzMessage * message = (SkillzMessage*) messageFactory.CreateMessage( SKILLZ_MESSAGE );
+            TestMessage * message = (TestMessage*) messageFactory.CreateMessage( TEST_MESSAGE );
             check( message );
             message->sequence = i;
             sender.SendMessage( 0, message );
         }
         else
         {
-            SkillzBlockMessage * message = (SkillzBlockMessage*) messageFactory.CreateMessage( SKILLZ_BLOCK_MESSAGE );
+            TestBlockMessage * message = (TestBlockMessage*) messageFactory.CreateMessage( TEST_BLOCK_MESSAGE );
             check( message );
             message->sequence = i;
             const int blockSize = 1 + ( ( i * 901 ) % 3333 );
@@ -1078,9 +1078,9 @@ void test_connection_reliable_ordered_messages_and_blocks()
 
             switch ( message->GetType() )
             {
-                case SKILLZ_MESSAGE:
+                case TEST_MESSAGE:
                 {
-                    SkillzMessage * testMessage = (SkillzMessage*) message;
+                    TestMessage * testMessage = (TestMessage*) message;
 
                     check( testMessage->sequence == uint16_t( numMessagesReceived ) );
 
@@ -1088,9 +1088,9 @@ void test_connection_reliable_ordered_messages_and_blocks()
                 }
                 break;
 
-                case SKILLZ_BLOCK_MESSAGE:
+                case TEST_BLOCK_MESSAGE:
                 {
-                    SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) message;
+                    TestBlockMessage * blockMessage = (TestBlockMessage*) message;
 
                     check( blockMessage->sequence == uint16_t( numMessagesReceived ) );
 
@@ -1149,14 +1149,14 @@ void test_connection_reliable_ordered_messages_and_blocks_multiple_channels()
         {
             if ( rand() % 2 )
             {
-                SkillzMessage * message = (SkillzMessage*) messageFactory.CreateMessage( SKILLZ_MESSAGE );
+                TestMessage * message = (TestMessage*) messageFactory.CreateMessage( TEST_MESSAGE );
                 check( message );
                 message->sequence = i;
                 sender.SendMessage( channelIndex, message );
             }
             else
             {
-                SkillzBlockMessage * message = (SkillzBlockMessage*) messageFactory.CreateMessage( SKILLZ_BLOCK_MESSAGE );
+                TestBlockMessage * message = (TestBlockMessage*) messageFactory.CreateMessage( TEST_BLOCK_MESSAGE );
                 check( message );
                 message->sequence = i;
                 const int blockSize = 1 + ( ( i * 901 ) % 3333 );
@@ -1199,9 +1199,9 @@ void test_connection_reliable_ordered_messages_and_blocks_multiple_channels()
 
                 switch ( message->GetType() )
                 {
-                    case SKILLZ_MESSAGE:
+                    case TEST_MESSAGE:
                     {
-                        SkillzMessage * testMessage = (SkillzMessage*) message;
+                        TestMessage * testMessage = (TestMessage*) message;
 
                         check( testMessage->sequence == uint16_t( numMessagesReceived[channelIndex] ) );
 
@@ -1209,9 +1209,9 @@ void test_connection_reliable_ordered_messages_and_blocks_multiple_channels()
                     }
                     break;
 
-                    case SKILLZ_BLOCK_MESSAGE:
+                    case TEST_BLOCK_MESSAGE:
                     {
-                        SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) message;
+                        TestBlockMessage * blockMessage = (TestBlockMessage*) message;
 
                         check( blockMessage->sequence == uint16_t( numMessagesReceived[channelIndex] ) );
 
@@ -1283,7 +1283,7 @@ void test_connection_unreliable_unordered_messages()
 
     for ( int j = 0; j < NumMessagesSent; ++j )
     {
-        SkillzMessage * message = (SkillzMessage*) messageFactory.CreateMessage( SKILLZ_MESSAGE );
+        TestMessage * message = (TestMessage*) messageFactory.CreateMessage( TEST_MESSAGE );
         check( message );
         message->sequence = j;
         sender.SendMessage( 0, message );
@@ -1304,9 +1304,9 @@ void test_connection_unreliable_unordered_messages()
             if ( !message )
                 break;
 
-            check( message->GetType() == SKILLZ_MESSAGE );
+            check( message->GetType() == TEST_MESSAGE );
 
-            SkillzMessage * testMessage = (SkillzMessage*) message;
+            TestMessage * testMessage = (TestMessage*) message;
 
             check( testMessage->sequence == uint16_t( numMessagesReceived ) );
 
@@ -1348,7 +1348,7 @@ void test_connection_unreliable_unordered_blocks()
 
     for ( int j = 0; j < NumMessagesSent; ++j )
     {
-        SkillzBlockMessage * message = (SkillzBlockMessage*) messageFactory.CreateMessage( SKILLZ_BLOCK_MESSAGE );
+        TestBlockMessage * message = (TestBlockMessage*) messageFactory.CreateMessage( TEST_BLOCK_MESSAGE );
         check( message );
         message->sequence = j;
         const int blockSize = 1 + ( j * 7 );
@@ -1374,9 +1374,9 @@ void test_connection_unreliable_unordered_blocks()
             if ( !message )
                 break;
 
-            check( message->GetType() == SKILLZ_BLOCK_MESSAGE );
+            check( message->GetType() == TEST_BLOCK_MESSAGE );
 
-            SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) message;
+            TestBlockMessage * blockMessage = (TestBlockMessage*) message;
 
             check( blockMessage->sequence == uint16_t( numMessagesReceived ) );
 
@@ -1439,14 +1439,14 @@ void SendClientToServerMessages( Client & client, int numMessagesToSend, int cha
 
         if ( rand() % 10 )
         {
-            SkillzMessage * message = (SkillzMessage*) client.CreateMessage( SKILLZ_MESSAGE );
+            TestMessage * message = (TestMessage*) client.CreateMessage( TEST_MESSAGE );
             check( message );
             message->sequence = i;
             client.SendMessage( channelIndex, message );
         }
         else
         {
-            SkillzBlockMessage * message = (SkillzBlockMessage*) client.CreateMessage( SKILLZ_BLOCK_MESSAGE );
+            TestBlockMessage * message = (TestBlockMessage*) client.CreateMessage( TEST_BLOCK_MESSAGE );
             check( message );
             message->sequence = i;
             const int blockSize = 1 + ( ( i * 901 ) % 1001 );
@@ -1469,14 +1469,14 @@ void SendServerToClientMessages( Server & server, int clientIndex, int numMessag
 
         if ( rand() % 10 )
         {
-            SkillzMessage * message = (SkillzMessage*) server.CreateMessage( clientIndex, SKILLZ_MESSAGE );
+            TestMessage * message = (TestMessage*) server.CreateMessage( clientIndex, TEST_MESSAGE );
             check( message );
             message->sequence = i;
             server.SendMessage( clientIndex, channelIndex, message );
         }
         else
         {
-            SkillzBlockMessage * message = (SkillzBlockMessage*) server.CreateMessage( clientIndex, SKILLZ_BLOCK_MESSAGE );
+            TestBlockMessage * message = (TestBlockMessage*) server.CreateMessage( clientIndex, TEST_BLOCK_MESSAGE );
             check( message );
             message->sequence = i;
             const int blockSize = 1 + ( ( i * 901 ) % 1001 );
@@ -1503,19 +1503,19 @@ void ProcessServerToClientMessages( Client & client, int & numMessagesReceivedFr
         
         switch ( message->GetType() )
         {
-            case SKILLZ_MESSAGE:
+            case TEST_MESSAGE:
             {
-                SkillzMessage * testMessage = (SkillzMessage*) message;
+                TestMessage * testMessage = (TestMessage*) message;
                 check( !message->IsBlockMessage() );
                 check( testMessage->sequence == uint16_t( numMessagesReceivedFromServer ) );
                 ++numMessagesReceivedFromServer;
             }
             break;
 
-            case SKILLZ_BLOCK_MESSAGE:
+            case TEST_BLOCK_MESSAGE:
             {
                 check( message->IsBlockMessage() );
-                SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) message;
+                TestBlockMessage * blockMessage = (TestBlockMessage*) message;
                 check( blockMessage->sequence == uint16_t( numMessagesReceivedFromServer ) );
                 const int blockSize = blockMessage->GetBlockSize();
                 check( blockSize == 1 + ( ( numMessagesReceivedFromServer * 901 ) % 1001 ) );
@@ -1547,19 +1547,19 @@ void ProcessClientToServerMessages( Server & server, int clientIndex, int & numM
 
         switch ( message->GetType() )
         {
-            case SKILLZ_MESSAGE:
+            case TEST_MESSAGE:
             {
                 check( !message->IsBlockMessage() );
-                SkillzMessage * testMessage = (SkillzMessage*) message;
+                TestMessage * testMessage = (TestMessage*) message;
                 check( testMessage->sequence == uint16_t( numMessagesReceivedFromClient ) );
                 ++numMessagesReceivedFromClient;
             }
             break;
 
-            case SKILLZ_BLOCK_MESSAGE:
+            case TEST_BLOCK_MESSAGE:
             {
                 check( message->IsBlockMessage() );
-                SkillzBlockMessage * blockMessage = (SkillzBlockMessage*) message;
+                TestBlockMessage * blockMessage = (TestBlockMessage*) message;
                 check( blockMessage->sequence == uint16_t( numMessagesReceivedFromClient ) );
                 const int blockSize = blockMessage->GetBlockSize();
                 check( blockSize == 1 + ( ( numMessagesReceivedFromClient * 901 ) % 1001 ) );

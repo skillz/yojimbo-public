@@ -17,9 +17,7 @@ solution "Yojimbo"
     end
     rtti "Off"
     links { libs }
-    warnings "Extra"
-    floatingpoint "Fast"
-    vectorextensions "SSE2"
+    flags { "ExtraWarnings", "FloatFast", "EnableSSE2" }
     configuration "Debug"
         symbols "On"
     configuration "Release"
